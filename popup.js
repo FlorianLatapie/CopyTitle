@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   
-    // Option 1: Copier l'URL
+    // Option 1: Copy only the URL
     copyUrlBtn.addEventListener('click', function() {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         copyToClipboard(tabs[0].url);
       });
     });
   
-    // Option 2: Copier le titre
+    // Option 2: Copy only the title
     copyTitleBtn.addEventListener('click', function() {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.scripting.executeScript({
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   
-    // Option 3: Copier au format Markdown
+    // Option 3: Copy the title and URL in Markdown format
     copyMarkdownBtn.addEventListener('click', function() {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         const url = tabs[0].url;
