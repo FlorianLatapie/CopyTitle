@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-
   // Get current tab info (url, title) ----------
   const getCurrentTabInfo = async () => {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -51,38 +50,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     return { url, title: results[0].result };
   };
 
-  // Actions for each button ----------
+  // Save last action for next time
+  const saveLastAction = (actionName) => {
+    chrome.storage.local.set({ lastAction: actionName });
+  };
 
-  // Option 1: Copy URL
-  elements.copyUrl.addEventListener('click', async () => {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    await copyTextToClipboard(tabs[0].url);
+  // Actions dictionary
+  const actions = {
+    copyUrl: async () => {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      await copyTextToClipboard(tabs[0].url);
+      saveLastAction('copyUrl');
+    },
+    copyTitle: async () => {
+      const { title } = await getCurrentTabInfo();
+      await copyTextToClipboard(title);
+      saveLastAction('copyTitle');
+    },
+    copyMarkdown: async () => {
+      const { url, title } = await getCurrentTabInfo();
+      await copyTextToClipboard(`[${title}](${url})`);
+      saveLastAction('copyMarkdown');
+    },
+    copyHtml: async () => {
+      const { url, title } = await getCurrentTabInfo();
+      await copyHtmlToClipboard(title, url);
+      saveLastAction('copyHtml');
+    }
+  };
+
+  // Set up button event listeners ----------
+  Object.keys(actions).forEach(action => {
+    elements[action].addEventListener('click', actions[action]);
   });
 
-  // Option 2: Copy Title
-  elements.copyTitle.addEventListener('click', async () => {
-    const { title } = await getCurrentTabInfo();
-    await copyTextToClipboard(title);
-  });
-
-  // Option 3: Copy Markdown
-  // Format: [title](url)
-  elements.copyMarkdown.addEventListener('click', async () => {
-    const { url, title } = await getCurrentTabInfo();
-    await copyTextToClipboard(`[${title}](${url})`);
-  });
-
-  // Option 4: Copy HTML
-  // Format: <a href="url">title</a>
-  elements.copyHtml.addEventListener('click', async () => {
-    const { url, title } = await getCurrentTabInfo();
-    await copyHtmlToClipboard(title, url);
-  });
-
-  // Default action (copy HTML)
+  // Execute default action based on last choice or default to copyHtml
   try {
-    const { url, title } = await getCurrentTabInfo();
-    await copyHtmlToClipboard(title, url);
+    const result = await chrome.storage.local.get('lastAction');
+    const lastAction = result.lastAction || 'copyHtml'; // Default to copyHtml if no previous action
+    await actions[lastAction]();
   } catch (err) {
     showStatus(`Erreur: ${err}`);
   }
