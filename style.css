@@ -7,28 +7,36 @@
   animation: fadeIn ease 400ms;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
+body {
+  border: solid 1px #DEE3ED;
+}
 
-  100% {
-    opacity: 1;
-  }
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 body {
   width: 250px;
   background-color: #ffffff;
-  padding: 0, 16px, 16px, 16px;
+  padding: 0;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 10px;
-  padding: 10px 0;
+  row-gap: 12px;
+  padding: 12px 0;
+  padding-bottom: 16px;
+}
+
+.header {
+  background-color: #f8f9fc;
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+  border-bottom: 1px solid #DEE3ED;
 }
 
 .logo {
@@ -41,7 +49,6 @@ body {
 h1 {
   height: 24px;
   font-size: 16px;
-  text-align: center;
   display: flex;
   align-items: center;
 }
@@ -60,18 +67,8 @@ h2 {
   width: 90%;
 }
 
-.header {
-  background-color: #f8f9fc;
-  display: flex;
-  flex-direction: row;
-  padding: 12px;
-  border-bottom: 1px solid #DEE3ED;
-}
-
 button {
-  display: inline-block;
   padding: 10px 20px;
-  text-decoration: none;
   border-radius: 100vh;
   background-color: #e9e9eb;
   color: #2374f5;
@@ -86,6 +83,10 @@ button {
 
 button:hover {
   background-color: #dcdce0;
+}
+
+button:active {
+  background-color: #c4c4c6;
 }
 
 #status {
