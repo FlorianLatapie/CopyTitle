@@ -11,6 +11,7 @@
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -19,21 +20,37 @@
 body {
   width: 250px;
   background-color: #ffffff;
-  padding: 16px;
+  padding: 0, 16px, 16px, 16px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  row-gap: 10px;
+  padding: 10px 0;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+  padding-right: 10px;
+}
+
+h1 {
+  height: 24px;
+  font-size: 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
 }
 
 h2 {
-  margin: 10px 0 20px;
-  color: #000000;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   text-align: center;
+  padding: 2px 0;
 }
 
 .button_container {
@@ -43,9 +60,17 @@ h2 {
   width: 90%;
 }
 
+.header {
+  background-color: #f8f9fc;
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+  border-bottom: 1px solid #DEE3ED;
+}
+
 button {
   display: inline-block;
-  padding: 12px 20px;
+  padding: 10px 20px;
   text-decoration: none;
   border-radius: 100vh;
   background-color: #e9e9eb;
@@ -67,6 +92,5 @@ button:hover {
   height: 20px;
   text-align: center;
   font-weight: 500;
-  margin-top: 16px;
   transition: opacity 0.3s;
 }
