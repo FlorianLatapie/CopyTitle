@@ -2,9 +2,11 @@
 
 ## How to use
 
-1. Clone this repository or download the zip file.
-2. Open the Extension Management page by navigating to `edge://extensions`.
-3. Enable Developer Mode by clicking the toggle switch next to Developer mode.
-4. Click the Load unpacked button and select the extension directory.
+1. Clone this repository **or** download the zip file and unzip it.
+2. Open `chrome://extensions` in your chromium based browser (Chrome, Edge ...).
+3. Enable `Developer mode`.
+4. Load the folder using the `Load unpacked` button.
+
+## Resources
 
 [Icon created by Creatype - Flaticon](https://www.flaticon.com/fr/icones-gratuites/copie)
