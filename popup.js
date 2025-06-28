@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const modifyUrl = (url) => {
+    return url
+  }
+
+  const modifyTitle = (title) => {
+    return title.replace(/ - Google (Docs|Sheets|Slides)$/, '')
+  } 
+
   // Get current tab info (url, title) ----------
   /**
    * Get the current tab's URL and title.
@@ -8,12 +16,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const tab = tabs[0];
-      const url = tab.url;
+      const url = modifyUrl(tab.url);
       const results = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => document.title
       });
-      return { url, title: results[0].result };
+      const title = modifyTitle(results[0].result || decodeURIComponent(url.replace(/^https?:\/\//, '')));
+      return { url, title };
     } catch (err) {
       return { url: '', title: '' };
     }
@@ -35,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     copyTitle: document.getElementById('copyTitle'),
     copyMarkdown: document.getElementById('copyMarkdown'),
     copyHtml: document.getElementById('copyHtml'),
+    copyBoth: document.getElementById('copyBoth')
   };
 
   // Clipboard functions ----------
@@ -49,22 +59,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
       alert(`Erreur: ${err}`);
     }
-  };
-
-  /**
-   * Copy HTML to the clipboard.
-   * @param {string} title - The title to copy.
-   * @param {string} url - The URL to copy.
-   * @returns {Promise<void>} - A promise that resolves when the HTML is copied.
-   */
-  const copyHtmlToClipboard = async (title, url) => {
-    const html = `<a href="${url}">${title}</a>`;
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        'text/plain': new Blob([title], { type: 'text/plain' }),
-        'text/html': new Blob([html], { type: 'text/html' })
-      })
-    ]);
   };
 
   // blink button ----------
@@ -116,8 +110,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     copyHtml: async (isDefault = false) => {
       const { url, title } = await getCurrentTabInfo();
-      await copyHtmlToClipboard(title, url);
+      const html = `<a href="${url}">${title}</a>`;
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/plain': new Blob([title], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' })
+        })
+      ]);
       saveLastAction('copyHtml');
+      if (!isDefault) closePopup();
+    },
+    copyBoth: async (isDefault = false) => {
+      const { url, title } = await getCurrentTabInfo();
+      const markdown = `[${title}](${url})`;
+      const html = `<a href="${url}">${title}</a>`;
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/plain': new Blob([markdown], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' })
+        })
+      ]);
+      saveLastAction('copyBoth');
       if (!isDefault) closePopup();
     }
   };
@@ -128,7 +141,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       'u': 'copyUrl',
       't': 'copyTitle',
       'm': 'copyMarkdown',
-      'h': 'copyHtml'
+      'h': 'copyHtml',
+      'a': 'copyBoth'
     };
 
     if (keyActions[event.key]) {
@@ -146,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Execute default action based on last choice or default to copyHtml
   try {
     const result = await chrome.storage.local.get('lastAction');
-    const lastAction = result.lastAction || 'copyHtml'; // Default to copyHtml if no previous action
+    const lastAction = result.lastAction || 'copyBoth'; // Default to copyBoth if no previous action
 
     const button = elements[lastAction];
     blinkButton(button);
@@ -154,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     actions[lastAction](true);
   } catch (err) {
     alert(`Erreur: ${err}`);
-    const lastAction = 'copyHtml';
+    const lastAction = 'copyBoth'; // Default to copyBoth if no previous action
     actions[lastAction](true);
   }
 });
