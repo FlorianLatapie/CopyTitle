@@ -10,7 +10,7 @@ $exclude = @(
     "*.ps1",
     "*.md",
     "temp",
-    "temp/*",
+    "CWS",
     "bookmarklet.js"
 )
 
