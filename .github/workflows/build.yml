@@ -1,0 +1,24 @@
+name: Build zip
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-zip:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Run build script
+        shell: pwsh
+        run: ./.github/workflows/build/build.ps1
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: CopyTitle-zip
+          path: CopyTitle.zip
