@@ -1,29 +1,29 @@
 {
-    "manifest_version": 3,
-    "name": "CopyTitle",
-    "version": "1.2",
-    "description": "Extension pour copier l'URL et le titre de la page active",
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "512": "icons/icon512.png"
-      }
-    },
-    "permissions": [
-      "activeTab",
-      "clipboardWrite",
-      "scripting",
-      "storage"
-    ],
-    "commands":{
-      "_execute_action": {
-        "suggested_key": {
-          "default": "Alt+C"
-        },
-        "description": "Ouvre la popup CopyTitle"
-      }
-    },
-    "icons": {
+  "manifest_version": 3,
+  "name": "CopyTitle",
+  "version": "1.2",
+  "description": "Extension pour copier l'URL et le titre de la page active",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CopyTitle",
+    "default_icon": {
       "512": "icons/icon512.png"
     }
+  },
+  "permissions": [
+    "activeTab",
+    "clipboardWrite",
+    "storage"
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+C"
+      },
+      "description": "Ouvre la popup CopyTitle"
+    }
+  },
+  "icons": {
+    "512": "icons/icon512.png"
   }
+}
